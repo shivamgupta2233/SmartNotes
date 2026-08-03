@@ -1,3 +1,5 @@
+from auth import auth
+from flask_login import LoginManager
 from flask import (
     Flask,
     render_template,
@@ -14,7 +16,7 @@ from reportlab.pdfgen import canvas
 
 from config import Config
 from database import db
-from models import Note
+from models import Note, User
 
 app = Flask(__name__)
 
@@ -24,9 +26,23 @@ app.config.from_object(Config)
 
 db.init_app(app)
 
+login_manager = LoginManager()
+
+login_manager.init_app(app)
+
+login_manager.login_view = "login"
+
+login_manager.login_message = "Please login to continue."
+
+login_manager.login_message_category = "warning"
+app.register_blueprint(auth)
 with app.app_context():
     db.create_all()
+    
+    @login_manager.user_loader
+    def load_user(user_id):  
 
+        return User.query.get(int(user_id))
 
 # ----------------------------------
 # HOME
