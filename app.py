@@ -235,13 +235,47 @@ def edit(id):
 # ----------------------------------
 
 @app.route("/update/<int:id>", methods=["POST"])
+@login_required
 def update(id):
 
-    note = Note.query.get_or_404(id)
+    note = Note.query.filter_by(
+        id=id,
+        user_id=current_user.id
+    ).first_or_404()
 
     note.title = request.form["title"]
     note.category = request.form["category"]
     note.content = request.form["content"]
+
+    image = request.files.get("image")
+    print("FILES:", request.files)
+    print("IMAGE:", image)
+    print("FILENAME:", image.filename if image else "No Image")
+
+    if image and image.filename != "":
+
+        # Delete old image
+        if note.image:
+
+            old_path = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                note.image
+            )
+
+            if os.path.exists(old_path):
+                os.remove(old_path)
+
+        # Save new image
+        filename = secure_filename(image.filename)
+
+        image.save(
+            os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+        )
+
+        note.image = filename
 
     db.session.commit()
 
@@ -257,9 +291,9 @@ def update(id):
 def favorite(id):
 
     note = Note.query.filter_by(
-    id=id,
-    user_id=current_user.id
-).first_or_404()
+        id=id,
+        user_id=current_user.id
+    ).first_or_404()
 
     note.favorite = not note.favorite
 
