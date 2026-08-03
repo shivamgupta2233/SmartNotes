@@ -1,4 +1,5 @@
 import os
+import uuid
 from werkzeug.utils import secure_filename
 from auth import auth
 from flask_login import LoginManager, login_required, current_user
@@ -133,8 +134,10 @@ def add():
 
     if image and image.filename != "":
 
-        filename = secure_filename(image.filename)
-
+        filename = (
+    str(uuid.uuid4()) + "_" +
+    secure_filename(image.filename)
+)
         image.save(
             os.path.join(
                 app.config["UPLOAD_FOLDER"],
@@ -266,7 +269,10 @@ def update(id):
                 os.remove(old_path)
 
         # Save new image
-        filename = secure_filename(image.filename)
+        filename = (
+    str(uuid.uuid4()) + "_" +
+    secure_filename(image.filename)
+)
 
         image.save(
             os.path.join(
