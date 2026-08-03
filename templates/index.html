@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+
+    <!-- Left Panel -->
+
+    <div class="col-lg-4">
+
+        <div class="card shadow">
+
+            <div class="card-header bg-success text-white">
+
+                <h4>
+
+                    {% if note %}
+                        ✏️ Edit Note
+                    {% else %}
+                        Add New Note
+                    {% endif %}
+
+                </h4>
+
+            </div>
+
+            <div class="card-body">
+
+                <form
+                    method="POST"
+                    action="{% if note %}/update/{{ note.id }}{% else %}/add{% endif %}">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Title
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="title"
+                            class="form-control"
+                            placeholder="Enter Note Title"
+                            value="{{ note.title if note else '' }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Category
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="category">
+
+                            <option value="Study"
+                                {% if note and note.category=="Study" %}selected{% endif %}>
+                                Study
+                            </option>
+
+                            <option value="Personal"
+                                {% if note and note.category=="Personal" %}selected{% endif %}>
+                                Personal
+                            </option>
+
+                            <option value="Work"
+                                {% if note and note.category=="Work" %}selected{% endif %}>
+                                Work
+                            </option>
+
+                            <option value="Others"
+                                {% if note and note.category=="Others" %}selected{% endif %}>
+                                Others
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Content
+
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            rows="7"
+                            name="content"
+                            placeholder="Write your note..."
+                            required>{{ note.content if note else '' }}</textarea>
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary w-100">
+
+                        {% if note %}
+                            Update Note
+                        {% else %}
+                            Save Note
+                        {% endif %}
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Right Panel -->
+
+    <div class="col-lg-8">
+
+        <!-- Dashboard -->
+
+        <div class="row text-center mb-4">
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card bg-primary text-white shadow dashboard-card">
+
+                    <div class="card-body">
+
+                        <h2>{{ notes|length }}</h2>
+
+                        <p>📝 Total Notes</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card bg-warning text-dark shadow dashboard-card">
+
+                    <div class="card-body">
+
+                        <h2>{{ favorites }}</h2>
+
+                        <p>⭐ Favorites</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card bg-success text-white shadow dashboard-card">
+
+                    <div class="card-body">
+
+                        <h2>{{ pinned }}</h2>
+
+                        <p>📌 Pinned</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-3 mb-3">
+
+                <div class="card bg-info text-white shadow dashboard-card">
+
+                    <div class="card-body">
+
+                        <h2>{{ categories }}</h2>
+
+                        <p>📂 Categories</p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Search -->
+
+        <div class="card shadow mb-4">
+
+            <div class="card-body">
+
+                <form method="GET">
+
+                    <div class="input-group mb-3">
+
+                        <input
+                            type="text"
+                            name="search"
+                            class="form-control"
+                            placeholder="🔍 Search Notes..."
+                            value="{{ search }}">
+
+                        <button
+                            class="btn btn-primary">
+
+                            Search
+
+                        </button>
+
+                    </div>
+
+                    <select
+                        class="form-select mb-3"
+                        name="category">
+
+                        <option value="All">All Categories</option>
+
+                        <option value="Study"
+                            {% if category=="Study" %}selected{% endif %}>
+                            Study
+                        </option>
+
+                        <option value="Personal"
+                            {% if category=="Personal" %}selected{% endif %}>
+                            Personal
+                        </option>
+
+                        <option value="Work"
+                            {% if category=="Work" %}selected{% endif %}>
+                            Work
+                        </option>
+
+                        <option value="Others"
+                            {% if category=="Others" %}selected{% endif %}>
+                            Others
+                        </option>
+
+                    </select>
+
+                    <div class="d-flex gap-2">
+
+                        <a
+                            href="/export/pdf"
+                            class="btn btn-danger">
+
+                            📄 Export PDF
+
+                        </a>
+
+                        <a
+                            href="/export/csv"
+                            class="btn btn-success">
+
+                            📊 Export CSV
+
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+<!-- Notes Section -->
+
+<div class="card shadow">
+
+    <div class="card-header bg-dark text-white">
+
+        <h4>Your Notes</h4>
+
+    </div>
+
+    <div class="card-body">
+
+        {% if notes %}
+
+            {% for note in notes %}
+
+                <div class="card mb-3 shadow-lg {% if note.pinned %}border-warning border-3{% else %}border-primary{% endif %}">
+
+                    <div class="card-body">
+
+                        <h4 class="fw-bold">
+
+                            {{ note.title }}
+
+                        </h4>
+
+                        <small class="text-muted">
+
+                            📅 {{ note.created.strftime("%d %b %Y") }}
+
+                        </small>
+
+                        <br><br>
+
+                        {% if note.category=="Study" %}
+
+                            <span class="badge bg-success">
+
+                        {% elif note.category=="Work" %}
+
+                            <span class="badge bg-danger">
+
+                        {% elif note.category=="Personal" %}
+
+                            <span class="badge bg-warning text-dark">
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+
+                        {% endif %}
+
+                        {{ note.category }}
+
+                        </span>
+
+                        {% if note.favorite %}
+
+                            <span class="badge bg-warning text-dark ms-2">
+
+                                ⭐ Favorite
+
+                            </span>
+
+                        {% endif %}
+
+                        {% if note.pinned %}
+
+                            <span class="badge bg-info ms-2">
+
+                                📌 Pinned
+
+                            </span>
+
+                        {% endif %}
+
+                        <hr>
+
+                        <p>
+
+                            {{ note.content }}
+
+                        </p>
+
+                        <div class="mt-3">
+
+                            <a
+                                href="/favorite/{{ note.id }}"
+                                class="btn btn-warning btn-sm">
+
+                                {% if note.favorite %}
+
+                                    ⭐ Unfavorite
+
+                                {% else %}
+
+                                    ☆ Favorite
+
+                                {% endif %}
+
+                            </a>
+
+                            <a
+                                href="/pin/{{ note.id }}"
+                                class="btn btn-info btn-sm">
+
+                                {% if note.pinned %}
+
+                                    📌 Unpin
+
+                                {% else %}
+
+                                    📍 Pin
+
+                                {% endif %}
+
+                            </a>
+
+                            <a
+                                href="/edit/{{ note.id }}"
+                                class="btn btn-primary btn-sm">
+
+                                ✏️ Edit
+
+                            </a>
+
+                            <a
+                                href="/delete/{{ note.id }}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this note?')">
+
+                                🗑 Delete
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="alert alert-info text-center">
+
+                <h5>
+
+                    📝 No Notes Found
+
+                </h5>
+
+                <p>
+
+                    Create your first note using the form on the left.
+
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}        

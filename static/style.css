@@ -1,0 +1,212 @@
+/* ---------------------------
+   GENERAL
+---------------------------- */
+
+body{
+
+    background:#f4f7fb;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    transition:.3s;
+
+}
+
+/* ---------------------------
+   NAVBAR
+---------------------------- */
+
+.navbar{
+
+    border-radius:0 0 18px 18px;
+
+}
+
+/* ---------------------------
+   CARDS
+---------------------------- */
+
+.card{
+
+    border:none;
+
+    border-radius:18px;
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+}
+
+/* ---------------------------
+   DASHBOARD
+---------------------------- */
+
+.dashboard-card{
+
+    transition:.3s;
+
+    cursor:pointer;
+
+}
+
+.dashboard-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+/* ---------------------------
+   BUTTONS
+---------------------------- */
+
+.btn{
+
+    border-radius:10px;
+
+}
+
+.btn-primary{
+
+    background:#0d6efd;
+
+}
+
+.btn-success{
+
+    background:#198754;
+
+}
+
+.btn-danger{
+
+    background:#dc3545;
+
+}
+
+/* ---------------------------
+   FORM
+---------------------------- */
+
+.form-control,
+.form-select{
+
+    border-radius:10px;
+
+}
+
+textarea{
+
+    resize:none;
+
+}
+
+/* ---------------------------
+   NOTE BADGES
+---------------------------- */
+
+.badge{
+
+    font-size:.8rem;
+
+    padding:7px 10px;
+
+}
+
+/* ---------------------------
+   FOOTER
+---------------------------- */
+
+footer{
+
+    margin-top:60px;
+
+    padding:20px;
+
+    text-align:center;
+
+    color:#666;
+
+}
+
+/* ---------------------------
+   DARK MODE
+---------------------------- */
+
+.dark-mode{
+
+    background:#121212;
+
+    color:white;
+
+}
+
+.dark-mode .card{
+
+    background:#1f1f1f;
+
+    color:white;
+
+}
+
+.dark-mode .card-header{
+
+    background:#2b2b2b !important;
+
+}
+
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode textarea{
+
+    background:#2b2b2b;
+
+    color:white;
+
+    border:1px solid #666;
+
+}
+
+.dark-mode .form-control::placeholder{
+
+    color:#bbb;
+
+}
+
+.dark-mode .btn{
+
+    border-color:white;
+
+}
+
+.dark-mode footer{
+
+    color:#ddd;
+
+}
+
+.dark-mode .text-muted{
+
+    color:#cccccc !important;
+
+}
+
+/* ---------------------------
+   MOBILE
+---------------------------- */
+
+@media(max-width:768px){
+
+    .dashboard-card{
+
+        margin-bottom:15px;
+
+    }
+
+}
