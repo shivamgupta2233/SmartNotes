@@ -42,29 +42,57 @@
 
             <ul class="navbar-nav ms-auto">
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/">🏠 Home</a>
-                </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/">🏠 Home</a>
+    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/export/pdf">📄 PDF</a>
-                </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/export/pdf">📄 PDF</a>
+    </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/export/csv">📊 CSV</a>
-                </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/export/csv">📊 CSV</a>
+    </li>
 
-                <li class="nav-item ms-2">
-                    <button
-                        id="darkModeBtn"
-                        class="btn btn-dark">
+    {% if current_user.is_authenticated %}
 
-                        🌙 Dark
+    <li class="nav-item">
+        <span class="nav-link text-white">
+            👋 {{ current_user.username }}
+        </span>
+    </li>
 
-                    </button>
-                </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('auth.logout') }}">
+            🚪 Logout
+        </a>
+    </li>
 
-            </ul>
+    {% else %}
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('auth.login') }}">
+            🔑 Login
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ url_for('auth.register') }}">
+            📝 Register
+        </a>
+    </li>
+
+    {% endif %}
+
+    <li class="nav-item ms-2">
+        <button
+            id="darkModeBtn"
+            class="btn btn-dark">
+            🌙 Dark
+        </button>
+    </li>
+
+</ul>
 
         </div>
 

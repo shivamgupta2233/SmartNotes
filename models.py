@@ -43,6 +43,11 @@ class Note(db.Model):
         db.ForeignKey("users.id"),
         nullable=False
     )
+    
+    image = db.Column(
+    db.String(255),
+    nullable=True
+    )
 class User(UserMixin, db.Model):
 
     __tablename__ = "users"
