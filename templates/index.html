@@ -43,9 +43,9 @@
             <div class="card-body">
 
                 <form
-                    method="POST"
-                    action="{% if note %}/update/{{ note.id }}{% else %}/add{% endif %}">
-
+                     method="POST"
+                     enctype="multipart/form-data"
+                     action="{% if note %}/update/{{ note.id }}{% else %}/add{% endif %}">
                     <div class="mb-3">
 
                         <label class="form-label">
@@ -116,6 +116,33 @@
                             required>{{ note.content if note else '' }}</textarea>
 
                     </div>
+                    <div class="mb-3">
+
+    <label class="form-label">
+
+        Upload Image
+
+    </label>
+
+    <input
+        type="file"
+        name="image"
+        class="form-control"
+        accept="image/*">
+
+</div>
+     {% if note and note.image %}
+
+<div class="mt-2">
+
+    <img
+        src="{{ url_for('static', filename='uploads/' + note.image) }}"
+        class="img-thumbnail"
+        style="max-height:150px;">
+
+</div>
+
+{% endif %}
 
                     <button
                         class="btn btn-primary w-100">
@@ -389,6 +416,14 @@
                             {{ note.content }}
 
                         </p>
+                        {% if note.image %}
+
+    <img
+        src="{{ url_for('static', filename='uploads/' + note.image) }}"
+        class="img-fluid rounded mt-2 mb-2"
+        style="max-height:250px;">
+
+{% endif %}
 
                         <div class="mt-3">
 

@@ -1,3 +1,5 @@
+import os
+from werkzeug.utils import secure_filename
 from auth import auth
 from flask_login import LoginManager, login_required, current_user
 from flask import (
@@ -19,6 +21,9 @@ from database import db
 from models import Note, User
 
 app = Flask(__name__)
+UPLOAD_FOLDER = "static/uploads"
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 app.secret_key = "smartnotes123"
 
@@ -101,36 +106,49 @@ def home():
     ).distinct().count()
 
     return render_template(
-
-        "index.html",
-
-        notes=notes,
-
-        search=search,
-
-        category=category,
-
-        favorites=favorites,
-
-        pinned=pinned,
-
-        categories=categories
-
-    )
+    "index.html",
+    notes=notes,
+    search=search,
+    category=category,
+    favorites=favorites,
+    pinned=pinned,
+    categories=categories
+)
     
 # ----------------------------------
 # ADD NOTE
 # ----------------------------------
 
 @app.route("/add", methods=["POST"])
+@login_required
 def add():
 
+    title = request.form["title"]
+    category = request.form["category"]
+    content = request.form["content"]
+
+    image = request.files.get("image")
+
+    filename = None
+
+    if image and image.filename != "":
+
+        filename = secure_filename(image.filename)
+
+        image.save(
+            os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                filename
+            )
+        )
+
     note = Note(
-        title=request.form["title"],
-        category=request.form["category"],
-        content=request.form["content"],
-        user_id=current_user.id
-)
+        title=title,
+        category=category,
+        content=content,
+        user_id=current_user.id,
+        image=filename
+    )
 
     db.session.add(note)
     db.session.commit()
@@ -138,7 +156,6 @@ def add():
     flash("✅ Note Added Successfully!", "success")
 
     return redirect("/")
-
 # ----------------------------------
 # DELETE NOTE
 # ----------------------------------
@@ -152,6 +169,15 @@ def delete(id):
         id=id,
         user_id=current_user.id
     ).first_or_404()
+    if note.image:
+
+        image_path = os.path.join(
+        app.config["UPLOAD_FOLDER"],
+        note.image
+    )
+
+    if os.path.exists(image_path):
+        os.remove(image_path)
 
     db.session.delete(note)
     db.session.commit()
