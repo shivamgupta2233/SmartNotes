@@ -38,7 +38,11 @@ class Note(db.Model):
         db.DateTime,
         server_default=db.func.now()
     )
-    
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id"),
+        nullable=False
+    )
 class User(UserMixin, db.Model):
 
     __tablename__ = "users"
@@ -63,6 +67,12 @@ class User(UserMixin, db.Model):
     password = db.Column(
         db.String(255),
         nullable=False
+    )
+    notes = db.relationship(
+        "Note",
+        backref="owner",
+        lazy=True,
+        cascade="all, delete-orphan"
     )
 
     def set_password(self, password):

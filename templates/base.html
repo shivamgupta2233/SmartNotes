@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Smart Notes</title>
@@ -21,16 +20,12 @@
 
 <body>
 
-<!-- Navbar -->
-
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
 
     <div class="container">
 
         <a class="navbar-brand fw-bold" href="/">
-
             📝 Smart Notes
-
         </a>
 
         <button
@@ -43,44 +38,23 @@
 
         </button>
 
-        <div
-            class="collapse navbar-collapse"
-            id="navbarNav">
+        <div class="collapse navbar-collapse" id="navbarNav">
 
             <ul class="navbar-nav ms-auto">
 
                 <li class="nav-item">
-
-                    <a class="nav-link" href="/">
-
-                        🏠 Home
-
-                    </a>
-
+                    <a class="nav-link" href="/">🏠 Home</a>
                 </li>
 
                 <li class="nav-item">
-
-                    <a class="nav-link" href="/export/pdf">
-
-                        📄 PDF
-
-                    </a>
-
+                    <a class="nav-link" href="/export/pdf">📄 PDF</a>
                 </li>
 
                 <li class="nav-item">
-
-                    <a class="nav-link" href="/export/csv">
-
-                        📊 CSV
-
-                    </a>
-
+                    <a class="nav-link" href="/export/csv">📊 CSV</a>
                 </li>
 
                 <li class="nav-item ms-2">
-
                     <button
                         id="darkModeBtn"
                         class="btn btn-dark">
@@ -88,7 +62,6 @@
                         🌙 Dark
 
                     </button>
-
                 </li>
 
             </ul>
@@ -99,29 +72,7 @@
 
 </nav>
 
-<!-- Main Container -->
-
 <div class="container mt-4">
-
-    <!-- Heading -->
-
-    <div class="text-center mb-4">
-
-        <h1 class="fw-bold">
-
-            📝 Smart Notes
-
-        </h1>
-
-        <p class="text-muted">
-
-            Organize your ideas quickly and efficiently
-
-        </p>
-
-    </div>
-
-    <!-- Flash Messages -->
 
     {% with messages = get_flashed_messages(with_categories=true) %}
 
@@ -137,7 +88,6 @@
                         type="button"
                         class="btn-close"
                         data-bs-dismiss="alert">
-
                     </button>
 
                 </div>
@@ -148,14 +98,10 @@
 
     {% endwith %}
 
-    <!-- Page Content -->
-
     {% block content %}
     {% endblock %}
 
 </div>
-
-<!-- Footer -->
 
 <footer class="mt-5 text-center">
 

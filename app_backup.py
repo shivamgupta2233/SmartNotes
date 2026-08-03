@@ -1,5 +1,5 @@
 from auth import auth
-from flask_login import LoginManager, login_required, current_user
+from flask_login import LoginManager
 from flask import (
     Flask,
     render_template,
@@ -30,7 +30,7 @@ login_manager = LoginManager()
 
 login_manager.init_app(app)
 
-login_manager.login_view = "auth.login"
+login_manager.login_view = "login"
 
 login_manager.login_message = "Please login to continue."
 
@@ -49,16 +49,13 @@ with app.app_context():
 # ----------------------------------
 
 @app.route("/")
-@login_required
 def home():
 
-    search = request.args.get("search")
+    search = request.args.get("search", "")
 
     category = request.args.get("category", "All")
 
-    query = Note.query.filter_by(
-        user_id=current_user.id
-    )
+    query = Note.query
 
     # Search
     if search:
@@ -128,9 +125,8 @@ def add():
     note = Note(
         title=request.form["title"],
         category=request.form["category"],
-        content=request.form["content"],
-        user_id=current_user.id
-)
+        content=request.form["content"]
+    )
 
     db.session.add(note)
     db.session.commit()
@@ -143,17 +139,13 @@ def add():
 # DELETE NOTE
 # ----------------------------------
 
-
 @app.route("/delete/<int:id>")
-@login_required
 def delete(id):
 
-    note = Note.query.filter_by(
-        id=id,
-        user_id=current_user.id
-    ).first_or_404()
+    note = Note.query.get_or_404(id)
 
     db.session.delete(note)
+
     db.session.commit()
 
     flash("🗑 Note Deleted Successfully!", "danger")
@@ -167,10 +159,7 @@ def delete(id):
 @app.route("/edit/<int:id>")
 def edit(id):
 
-    note = Note.query.filter_by(
-        id=id,
-        user_id=current_user.id
-    ).first_or_404()
+    note = Note.query.get_or_404(id)
 
     search = ""
 
@@ -230,10 +219,7 @@ def update(id):
 @app.route("/favorite/<int:id>")
 def favorite(id):
 
-    note = Note.query.filter_by(
-    id=id,
-    user_id=current_user.id
-).first_or_404()
+    note = Note.query.get_or_404(id)
 
     note.favorite = not note.favorite
 
@@ -248,10 +234,8 @@ def favorite(id):
 @app.route("/pin/<int:id>")
 def pin(id):
 
-    note = Note.query.filter_by(
-    id=id,
-    user_id=current_user.id
-).first_or_404()
+    note = Note.query.get_or_404(id)
+
     note.pinned = not note.pinned
 
     db.session.commit()
